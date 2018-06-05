@@ -1,0 +1,41 @@
+\documentclass[a4paper]{article}
+
+\usepackage[english]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage[colorinlistoftodos]{todonotes}
+\usepackage{listings} 
+
+\title{Verifying correctness of Stainless programs using Coq}
+
+\author{Bence Czipó, Jad Hamza}
+
+\date{\today}
+
+\input{include/preamble}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+I am not sure if it is indeed required for a project report.
+\end{abstract}
+
+\input{include/intro}
+\input{include/background}
+\input{include/translation}
+
+\input{include/correctness}
+
+\input{include/solving}
+\input{include/impl}
+
+\begin{thebibliography}{9}
+\bibitem{nano3}
+  K. Grove-Rasmussen og Jesper Nygård,
+  \emph{Kvantefænomener i Nanosystemer}.
+  Niels Bohr Institute \& Nano-Science Center, Københavns Universitet
+
+\end{thebibliography}
+\end{document}

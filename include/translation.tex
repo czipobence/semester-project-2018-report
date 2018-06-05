@@ -1,0 +1,64 @@
+\section{Transforming Stainless Programs to Coq}
+
+In order to verify Stainless programs in Coq, they are needed to be transformed into a correctly typed Coq program.
+
+\begin{definition}[Translation function]
+	Let $\tf$ be a function that assigns a (correctly typed) Coq program to every (correctly typed) Stainless program. Though $\tf$ is not designed to be invertible, for simplicity let us introduce the $\invtf$ notation where $\invtf(\tf(p)) = p$.
+\end{definition}
+
+The translation consists of two steps: translating ADT's and translating functions.
+
+\subsection{Translating ADT's}
+
+In stainless, there are two kinds of ADT's, ADTSort for the root of class hierarchies and ADTConstructor for the case classes.
+
+For example consider the following class hierarchy:
+
+\begin{lstlisting}[style=myScalastyle]  
+sealed abstract class List[T] {}
+
+case class Nil[T]() extends List[T] {}
+
+case class Cons[T](h: T, t: List[T]) extends List[T] {}
+\end{lstlisting}
+
+The translation starts from each ADTSort and creates an inductive definition stating that an ADTSort is one of its constructor. A constructor can be expressed as  a type, that takes the types of arguments and maps it to an ADTSort. In our example, the translated version would be.
+
+\begin{lstlisting}[style=myCoqstyle]  
+Inductive List (T: Type) :=
+| Cons: T -> ((List T) -> (List T))
+| Nil: List T.
+\end{lstlisting}
+
+Based on the constructor used to construct the object, we can define a recognizer, that decides for an abstract supertype if it is instance of a concrete subtype. This can be achieved through pattern matching. For example in case of Cons it would be:
+\begin{lstlisting}[style=myCoqstyle]  
+Definition isCons (T: Type) (src: List T) : bool :=
+match src with
+| Cons _ _ _ => true
+| _ => false
+end.
+\end{lstlisting}
+
+Using this recognizers, we can also define a type for each subtype as a dependent type. For Cons from our example, it would be:
+
+\begin{lstlisting}[style=myCoqstyle]  
+Definition Cons_type (T: Type) : Type :=
+{src: List T | (isCons T src = true)}. 
+\end{lstlisting}
+
+Now, with types corresponding to case classes,  we can express the field accessors by simply pattern matching on the object. The corresponding argument of the constructor can be reutrned. For instnace in case of the ead of a list it would be:
+
+\begin{lstlisting}[style=myCoqstyle]  
+Definition h (T: Type) (src: Cons_type T) : T :=
+match src with
+| Cons_construct _ f0 f1 => f0
+| _ => let contradiction: False := _ in match contradiction with end
+end. 
+\end{lstlisting}
+
+Note that the second branch is only required so that the match is exhaustive. However due to obligations, that branch is impossible, and the environment is forced to check that with deriving False. 
+
+We also generate some lemmas and tactics using them to rewrite certain expressions using ADT constructs that are not detailed here. %TODO yet?
+
+
+\subsection{Translating Functions}

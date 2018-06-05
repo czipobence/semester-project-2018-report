@@ -1,0 +1,29 @@
+\section{Background}
+
+\subsection{Stainless}
+
+Stainless is a verification framework for Scala programs. Among other things, it extends scala functions with the notion of pre- and postcondition. From the practical approach, a Stainless program can be divided into two parts: ADT definitions and functions. A general stainless function consists of a precondition $\text{pre}$, a function body $\text{body}$ and a postcondition $\lambda  \text{res}. ~\text{post}( \text{res})$ where $$\text{pre} \implies (\lambda  \text{res}. ~\text{post}( \text{res})) \text{body}$$
+
+\subsection{Coq}
+
+Coq is an proof assistant based on the calculus of constructions. It provides functionality to write definitions and theorems and an interactive environment to prove them. Even though Coq is not an automated theorem prover, it also provides some automatism through tactics.
+
+One big advantage of Coq is that there exist several libraries that extend the core features. During our work, we used two of those.
+
+%https://coq.inria.fr/refman/addendum/program.html
+\subsubsection{Program Library}
+
+Program is a Coq library that introduces the concept of dependent types in a form of $\{e: T | P\}$ where $T$ is a type and $P$ is a predicate. 
+
+The program library generates obligations to plug in the "holes" in the types. The environment tries to solve the generated obligation with a user-defined obligation tactic.
+
+
+\subsubsection{Coq-Equations}
+%https://github.com/mattam82/Coq-Equations
+"Equations provides a notation for writing programs by dependent pattern-matching and (well-founded) recursion in Coq. It compiles everything down to eliminators for inductive types, equality and accessibility, providing a definitional extension to the Coq kernel."
+
+\subsubsection{Coq-std++}
+
+%ref: https://gitlab.mpi-sws.org/robbertkrebbers/coq-stdpp
+\emph{Coq-std++ (stdpp)} is a self-contained collection of data structures, lemmas and tactics that is intended to extend the functionality of the standard library of Coq. It fetaures a set representation with all the common operations and a solver tactic to solve goals involving them.
+
