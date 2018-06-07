@@ -1,7 +1,9 @@
 \section{Implementation/Architecture/Results}
 
-Replaced verification checker with own verification checker.
+We implemented the translation methods in \scalaInline{stainless.verification.CoqEncoder.scala} and  \scalaInline{stainless.verification.CoqExpression.scala}. The generated methods are written into temporary files, and coqc is invoked on them. For each function, a separate .v file is created, and each file contains all the dependencies of the function. For simplicity, we assumed a function depends on all ADT's and the functions it invokes directly or transitively. In order to speed verification and to eliminate a domino effect caused by one failing verification step, all obligations of the dependencies are admitted. The logic handling .v files can be found in \scalaInline{stainless.verification.CoqIO.scala}
 
-Generate a separate coq file for every function. Admit obligation for all the dependencies, and only verify that one.
+In order to integrate our solution into the Stainless framework we replaced \scalaInline{VerificationChecker} with \scalaInline{CoqVerificationChecker}. It creates a verification condition for each method (file) and puts its result to the report. Because functions are verified individually, their verification can be canceled, or timeout can be defined for them.
+%
+In order to activate coq verification, a \scalaInline{--coq} flag has to be passed to stainless.
 
-Include results in a table form
+To benchmark the translation and verification, it has been run on the Lists library with 10 minutes timeout (per function case). The results are summarized in the following table:

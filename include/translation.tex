@@ -3,12 +3,28 @@
 In order to verify Stainless programs in Coq, they are needed to be transformed into a correctly typed Coq program.
 
 \begin{definition}[Translation function]
-	Let $\tf$ be a function that assigns a (correctly typed) Coq program to every (correctly typed) Stainless program. Though $\tf$ is not designed to be invertible, for simplicity let us introduce the $\invtf$ notation where $\invtf(\tf(p)) = p$.
+	Let $\tf$ be a function that assigns a (correctly typed) Coq program to every (correctly typed) Stainless program. Though $\tf$ is not designed to be invertible, for simplicity let us introduce the $\invtf$ notation where $\invtf(\tf(p)) = p$. Also for simplicity, let us denote $\tf(p)$ by $\tr{p}$.
 \end{definition}
 
-The translation consists of two steps: translating ADT's and translating functions.
+Many scala construct has its exact representation in Coq. For instance integers can be handled with the Z library, lambda constructs can be translated to coq lambdas, or let's can be translated directly into lets in coq. In the following we will only highlight the non-trivial translation steps. Also, the uniqueness of function and parameter names has to be ensured that we achieve through renaming. From now on, let us assume that every name is unique in its scope.
+
+The if-then-else expressions in Scala could be translated into Coq's own if-then-else constructs, however, during verification, we would like to propagate the boolean value of the condition into the branches. For this reason, we defined our own if-then-else constructs.
+
+\begin{lstlisting}[style=myCoqstyle]
+Definition ifthenelse b A (e1: true = b -> A) (e2: false = b -> A): A :=
+match b as B return (B = b -> A) with
+| true => fun H => e1 H
+| false => fun H => e2 H
+end eq_refl.
+\end{lstlisting}
+
+We use this if-then-else to translate non-exhaustive matches and boolean and operations. Other boolean operations are translated to their Coq correspondent.
+
+The sets and set operations are all translated to the structures of the stdpp library. Coq equality is translated to the $=$ operator in Coq with exception of booleans, integers and sets. The equality operator has Prop result, however, the context in which we use equality usually requires booleans. To convert the two, we defined a propInBool function, however it is also requires to assume a classical type system, i.e. every Prop is either True or False.
 
 \subsection{Translating ADT's}
+
+The translation of whole programs consists of two steps: translating ADT's and translating functions.
 
 In stainless, there are two kinds of ADT's, ADTSort for the root of class hierarchies and ADTConstructor for the case classes.
 
@@ -62,3 +78,51 @@ We also generate some lemmas and tactics using them to rewrite certain expressio
 
 
 \subsection{Translating Functions}
+
+Since forward declaration is difficult to implement in Coq, it is important to have a total order of functions, in which no function is referenced before it is defined. For this reason, our transforming methods does not support mutually recursive functions. It is easy to see that if there is no mutual recursivity in a set of functions, such order exists.
+
+\subsubsection{Translating Non-recursive Functions}
+
+A function $f$ with body $b$, type parameters $T_1, \ldots T_k$, parameters $p_1, \ldots p_n$ with types $U_1, U_2, \ldots U_n$ and a return type $U_r$ can be translated into a simple Coq definition.
+%
+Preconditions can be interpreted as assertion in the beginning of the function. This can be expressed in Coq by taking an argument that states that the precondition holds, in oder means, taking an argument with the type $\text{pre} = \true$.
+%
+Postconditions can be expressed by a dependent return type. In case of a postcondition  $\lambda  \text{res}. ~\text{post}( \text{res})$ the return type changes to $\{\text{res}: U_r ~|~ \text{post}( \text{res})\}$. 
+%
+So a general translated function looks like this:
+\begin{lstlisting}[style=myCoqstyle]  
+Definition f ($T_1$: Type) ... ($T_k$: Type)($p_1$: $\tr{U_1}$) $\ldots$ ($p_n$: $\tr{U_n}$) (prec1: $\tr{\text{pre}}$ = true) : 
+		{res: $\tr{U_r} ~|~ \tr{\text{post}}$ res} :=
+			$\tr{b}$.
+\end{lstlisting}
+
+\subsubsection{Translating Recursive Functions}
+
+The Program library offers \coqInline{Program Fixpoint} to handle recursive functions, however, the fixpoint operator makes it difficult to rewrite recursive functions with their definitions. To overcome this, we used the Equations library. 
+
+In case of recursive functions, we decided to focus on verification, so we ignored termination. For this, we defined an axiom, that we can pass as a decreasing measure:
+
+\begin{lstlisting}[style=myCoqStyle]
+	Axiom ignore_termination: nat.
+\end{lstlisting}
+
+Equations do not allow dependent types like the Program library did. In order to work around that, in case of a postcondition, we have to define the return type using a Program Definition, and after, we can use that type in the equations.
+
+Thus in this case, a translated function would be:
+
+\begin{lstlisting}[style=myCoqstyle]  
+Definition rt ($T_1$: Type) ... ($T_k$: Type)($p_1$: $\tr{U_1}$) $\ldots$ ($p_n$: $\tr{U_n}$) (prec1: $\tr{\text{pre}}$ = true) $\ldots$ : Type :=
+		{res: $\tr{U_r} ~|~ \tr{\text{post}}$ res}
+
+Equations f ($T_1$: Type) ... ($T_k$: Type)($p_1$: $\tr{U_1}$) $\ldots$ ($p_n$: $\tr{U_n}$) (prec1: $\tr{\text{pre}}$ = true) $\ldots$ : 
+	rt $T_1$ $\ldots$ $T_k$ $p_1$ $\ldots$ $p_n$ prec1 $\ldots$ :=
+		f $T_1$ $\ldots$ $T_k$ $p_1$ $\ldots$ $p_n$ prec1 $\ldots$ by rec ignore_termination lt :=
+		f $T_1$ $\ldots$ $T_k$ $p_1$ $\ldots$ $p_n$ prec1 $\ldots$ :=
+			$\tr{b}$.
+\end{lstlisting}
+
+Later, if we want to rewrite with the content of the function, we can rely on the fact that it will be expressed by \coqInline{f\_equation\_1}.
+
+\subsubsection{Function Invocation}
+
+The function application can be translated as function application in Coq, however, it must be taken into account, that functions with preconditions take more parameters. The program library allows us to pass unknown arguments (underscores) and requires us to construct proof for them later in form of obligation proofs. When the invoked function has a postcondition the return type is not exactly what is a refined type, that needs to be projected.

@@ -3,7 +3,11 @@
 
 \newcommand{\tf}{t}
 \newcommand{\invtf}{t^{-1}}
-
+\newcommand{\true}{\text{true}}
+\newcommand{\false}{\text{false}}
+\newcommand{\True}{\top}
+\newcommand{\False}{\bottom}
+\newcommand{\tr}[1]{[#1]}
 
 %% LISTINGS %%
 
@@ -56,3 +60,6 @@
 	breakatwhitespace=true,
 	tabsize=3,
 }
+
+\newcommand{\scalaInline}[1]{\lstinline[style=myScalastyle]|#1|}
+\newcommand{\coqInline}[1]{\lstinline[style=myCoqStyle]|#1|}

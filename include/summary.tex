@@ -1,0 +1,5 @@
+\section{Conclusions}
+
+We have implemented methods to transform Stainless programs with recursive functions and other nontrivial constructs into Coq programs. We also defined tactics to automatically generate proof for most of the cases. Our tactics are able to perform case analyis, and recursive function inlining without infinite loops. The automatic proof generation handles the majority of the functions in the Lists library. We also integrated our solution into the Stainless framework.
+
+Future work includes extending the set of supported Stainless elements, for example with mutually recursive functions. The tactics can be also enhanced further to handle the remainder of the library. There is also room for improvement with the speed of tactics, as for example the external set-solver from stdpp takes a lot of time to fail, thus slows down every case where recursive inlining is needed. Checking termination of recursive functions is also a possible enhancement.

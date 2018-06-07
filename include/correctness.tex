@@ -6,3 +6,20 @@ The goal of the previous translation was to be able to reason about the correctn
 	\item if a stainless program $p$ is valid, than $\tf(p)$ is also valid,
 	\item if $\tf(p)$ is valid, than $p$ is also valid.
 \end{enumerate}
+
+contratdiction(p: False) : T := match p with
+end.
+
+assume t crashes
+it takes a branch that leads to error
+than the cq representation t' take some reduction branch to a state where
+{} |- p: False (empty context implies p of type false)
+
+Contradiction, because every correctly typed expression should evaluate to a value of that type and there is no value of type False
+
+We assume that if a term b evaluate to true in stainless (b --*> true) than in coq t(b) --coq-> true
+ 
+
+thus an if will chose that branch
+
+Not so clear with params, e.g. functions
