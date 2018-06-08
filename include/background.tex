@@ -2,25 +2,49 @@
 
 \subsection{Stainless}
 
-Stainless is a verification framework for Scala programs. Among other things, it extends scala functions with the notion of pre- and postcondition. From the practical approach, a Stainless program can be divided into two parts: ADT definitions and functions. A general stainless function consists of a precondition $\text{pre}$, a function body $\text{body}$ and a postcondition $\lambda  \text{res}. ~\text{post}( \text{res})$ where $$\text{pre} \implies (\lambda  \text{res}. ~\text{post}( \text{res})) \text{body}$$
+Stainless is a verification framework for Scala programs. Among other things, it extends scala functions with the notion of pre- and postcondition. From the practical approach, a Stainless program can be divided into two parts: ADT definitions and functions. A general stainless function (for simplicity, let us assume that it takes only one parameter of type A) consists of a precondition $\text{pre}: A -> Bool$, a function body $\text{body}$ and a postcondition $\lambda  \text{res}. ~\text{post}( \text{res})$ where 
+
+$$\forall x : A, ~ \text{pre}(x) \implies (\lambda  \text{res}. ~\text{post}( \text{res})) \text{body}$$
 
 \subsection{Coq}
 
-Coq is an proof assistant based on the calculus of constructions. It provides functionality to write definitions and theorems and an interactive environment to prove them. Even though Coq is not an automated theorem prover, it also provides some automatism through tactics.
+Coq is an proof assistant based on the calculus of inductive constructions. It provides functionality to write definitions and theorems and an interactive environment to prove them. Even though Coq is not an automated theorem prover, it also provides some automatism through tactics.
 
 One big advantage of Coq is that there exist several libraries that extend the core features. During our work, we used two of those.
 
 %https://coq.inria.fr/refman/addendum/program.html
 \subsubsection{Program Library}
 
-Program is a Coq library that introduces the concept of dependent types in a form of $\{e: T | P\}$ where $T$ is a type and $P$ is a predicate. 
+Program is a Coq library that allows the users to convert between types and dependent types implicitly while generating obligations to plug in holes in the context. The library also allows us to write incomplete expressions using the underscore character, and will generate further obligations to fill in the holes. The environment tries to solve the generated obligations with a user-defined obligation tactic, which gives the possibility to automate the proofs.
 
-The program library generates obligations to plug in the "holes" in the types. The environment tries to solve the generated obligation with a user-defined obligation tactic.
+For example, we can have the following definition:
 
+\begin{lstlisting}[style=myCoqstyle]
+Definition add (n : nat)(m: nat) (p: n >= m) : { x : nat | x > 2 } :=
+Nat.add n 1.
+\end{lstlisting}
+
+The refined type will generate an obligation we have to prove:
+\begin{lstlisting}[style=myCoqstyle]
+$\forall$ n m : nat, n $\ge$ m $\rightarrow$ ($\lambda$ x : nat, x > 2) (n + 1)%nat
+\end{lstlisting}
+
+Using add, we can give an example for obligations generated to plug in holes in types:
+
+\begin{lstlisting}[style=myCoqstyle]
+Definition mul2(n: nat): nat := add n n _.
+\end{lstlisting}
+
+It will generate require us to give an expression of the type of the missing part, specifically in this case
+
+\begin{lstlisting}[style=myCoqstyle]
+$\forall$ n: nat, n $\ge$ n
+\end{lstlisting}
 
 \subsubsection{Coq-Equations}
 %https://github.com/mattam82/Coq-Equations
-"Equations provides a notation for writing programs by dependent pattern-matching and (well-founded) recursion in Coq. It compiles everything down to eliminators for inductive types, equality and accessibility, providing a definitional extension to the Coq kernel."
+
+The Equations library provides a notation to write recursive programs in Coq. It defines equations between function definition and its body which will come in hand when rewriting recursive functions.
 
 \subsubsection{Coq-std++}
 

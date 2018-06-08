@@ -16,7 +16,7 @@ Errors are translated to Coq using contradiction: $\tr{\text{error}} = \text{con
 Contradictions can be expressed as the obligation to generate false.
 
 \begin{lstlisting}[style=myCoqstyle]
-Definition contradiction(p: False) : T := match p with end.
+Definition contradiction (T: Type)(p: False) : T := match p with end.
 \end{lstlisting} 
 
 Applying \coqInline{contradiction} on an unknown variable will result in an obligation to derive \coqInline{False} from the context.

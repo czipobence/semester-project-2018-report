@@ -1,6 +1,6 @@
 \section{Automatically Solving the Generated Goals}
 
-In order to automate the generation of proofs, we defined several tactics, that are invoked in a strict order. 
+In order to automate the generation of proofs, we defined several tactics, that are invoked in a strict order.
 
 The tactics are carried out in the following order:
 
@@ -30,6 +30,8 @@ ifthenelse b T e1 e2 = value <-> (
 	(exists H2: false = b, e2 H2 = value)
 ).
 \end{lstlisting}
+
+In case of recursive functions, we decided to focus on verification, so we ignored termination. For this, we defined a tactic to admit all obligations related to termination, which is also included among the fast tactics, so that Coq does not waste much time solving it.
 
 \subsection{Basic tactics}
 

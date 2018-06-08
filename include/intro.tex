@@ -1,4 +1,10 @@
 \section{Introduction}
 \label{sec:introduction}
 
-Correctness of programs is hard to verify 
+Since the appearance of the first software, formally proving their correctness has been a hot topic. There are several approaches to perform formal verification using different foundations such as satisfiability modulo theories (SMT) or the calculus of inductive constructions.
+
+Stainless, a software verification framework developed at École Polytechnique Fédérale de Lausanne, uses SMT solvers, whereas Coq is the most known representer of proof assistant using the calculus of inductive constructions.
+
+In case of formal verification tools, the question always remains, whether the tool is correct. In other terms, who is going to verify the verification checker? One approach to do so can be to transform the input of one to an other, broadly accepted tool, and compare the verification results. 
+
+In this report, I going to propose a verification method for Stainless programs using the Coq proof assistant. The translation and verification is done automatically, and integrates to the Stainless toolchain. During this report, I only focus on correctness, and ignore termination of programs, moreover I limit the allowed Stainless expressions. To benchmark my work, at the end of the report, I include the verification result of the method run in the Lists library of Stainless.
