@@ -1,1 +1,53 @@
 \section{Automatically Solving the Generated Goals}
+
+In order to automate the generation of proofs, we defined several tactics, that are invoked in a strict order. 
+
+The tactics are carried out in the following order:
+
+\begin{enumerate}
+	\item First of all, we try to solve the goal with some fast tactics.
+	\item Some basic rewrites are performed, along with some fast tactics.
+	\item More time-demanding tactics are performed, concretely \coqInline{omega}, \coqInline{ring}, \coqInline{eauto} and the \coqInline{set-solver} tactic of the stdpp library.
+	\item Case analysis of if-then-else branches.
+	\item Rewrites with function bodies and recognizers.
+\end{enumerate}
+
+\subsection{Fast tactics}
+
+Fast tactics involve tactics that fail fast, so that they do not block execution. They include basic tactics such as \coqInline{cbn}, \coqInline{intros}, \coqInline{intuition}, ...
+We also rewrite with a basic set of rewrite rules concerning integer and boolean operations. We also define some lemmas to rewrite with, for example ones handling boolean and Prop relations:
+
+\begin{lstlisting}[style=myCoqstyle]
+	forall P, propInBool P = true <-> P
+\end{lstlisting}
+
+or ones handling the dependent of-then-else:
+
+
+\begin{lstlisting}[style=myCoqstyle]
+ifthenelse b T e1 e2 = value <-> (
+	(exists H1: true = b, e1 H1 = value) \/
+	(exists H2: false = b, e2 H2 = value)
+).
+\end{lstlisting}
+
+\subsection{Basic tactics}
+
+Basic tactics involve
+\begin{itemize}
+	\item rewriting with boolean constants or values
+	\item destruction of simple constructs such as exists expressions or refinement
+	\item performing property and boolean rewrites (rewrites of \coqInline{propInBool})
+\end{itemize}
+
+\subsection{Case analysis}
+
+Case analysis involves branching on dependent and non-dependent (Coq's built in) if-then-else expressions with simplifications whenever possible.
+
+\subsection{Rewrites}
+
+The rewrites performed at the very end, mostly because they usually over-complicate simple problems. First, we rewrite with non-recursive types. This step is guaranteed to terminate, as mutual recursion is not allowed.
+
+After, we rewrite with the equations defined for recursive types. Note that in some cases, this process might loop. We only rewrite with the body of recursive functions, if their body will probably not be the subject of further refinement. For example, for a list, if we rewrite size, we have to perform case analysis later, to check if the argument was Nil or Cons. This just introduce more branches to deal with. However, if we know that the list is Nil or Cons, we can rewrite with \coqInline{0} or \coqInline{1 + size tail}.
+
+Eventually, if the tactics reach it, we rewrite with the definition of recognizers.
