@@ -204,8 +204,12 @@
 \begin{frame}
 	\frametitle{The Translation Function}
 	\begin{definition}[Translation function]
-		Let $\tf$ be a function that assigns a (correctly typed) Coq program to every (correctly typed) Stainless program. Though $\tf$ is not designed to be invertible, for simplicity let us introduce the $\invtf$ notation where $\invtf(\tf(p)) = p$. Also for simplicity, let us denote $\tf(p)$ by $\tr{p}$.
+		Let $\tf$ be a function that assigns a (correctly typed) Coq program to every (correctly typed) Stainless program.
 	\end{definition}
+
+	\onslide<2->{ Though $\tf$ is not designed to be invertible, for simplicity let us introduce the $\invtf$ notation where $\invtf(\tf(p)) = p$.}
+	
+	\onslide<3->{Also for simplicity, let us denote $\tf(p)$ by $\tr{p}$.}
 \end{frame}
 \subsection{Basic Concepts}
 
@@ -234,6 +238,35 @@
 	
 \end{frame}
 
+
+\begin{frame}[fragile]{The Program Library}
+	For example, we can have the following definition:
+	\begin{lstlisting}[style=myCoqstyle]
+	Definition add (n : nat)(m: nat) (p: n >= m) : { x : nat | x > 2 } :=
+	Nat.add n 1.
+	\end{lstlisting}
+	
+	The refined type will generate an obligation we have to prove:
+	\begin{lstlisting}[style=myCoqstyle]
+	$\forall$ n m : nat, n $\ge$ m $\rightarrow$ ($\lambda$ x : nat, x > 2) (n + 1)%nat
+	\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{The Program Library}
+	Using add, we can give an example for obligations generated to plug in holes in types:
+	
+	\begin{lstlisting}[style=myCoqstyle]
+	Definition mul2(n: nat): nat := add n n _.
+	\end{lstlisting}
+	
+	It will generate require us to give an expression of the type of the missing part, specifically in this case
+	
+	\begin{lstlisting}[style=myCoqstyle]
+	$\forall$ n: nat, n $\ge$ n
+	\end{lstlisting}
+\end{frame}
+
+
 \begin{frame}
 	\frametitle{Translating simple types}
 	
@@ -251,6 +284,20 @@
 		\item $\tr{\lambda x. ~ e} = (\text{fun} ~ x ~ \Longrightarrow ~ \tr{e} \ldots)$
 	\end{itemize}
 	 
+\end{frame}
+
+\begin{frame}[fragile]{Translating error}
+	Errors are translated to Coq using contradiction:
+	
+$\tr{\text{error}} = \text{contradiction} ~ \_$
+
+Contradictions can be expressed as the obligation to prove false.
+	
+\begin{lstlisting}[style=myCoqstyle]
+Definition contradiction (T: Type)(p: False) : T :=
+	match p with 
+	end.
+\end{lstlisting}
 \end{frame}
 
 \begin{frame}[fragile]
@@ -321,33 +368,6 @@ Axiom classicT: forall P: Prop, P + ~P.
 	
 \end{frame}
 
-\begin{frame}[fragile]{The Program Library}
-	For example, we can have the following definition:
-	\begin{lstlisting}[style=myCoqstyle]
-	Definition add (n : nat)(m: nat) (p: n >= m) : { x : nat | x > 2 } :=
-	Nat.add n 1.
-	\end{lstlisting}
-	
-	The refined type will generate an obligation we have to prove:
-	\begin{lstlisting}[style=myCoqstyle]
-	$\forall$ n m : nat, n $\ge$ m $\rightarrow$ ($\lambda$ x : nat, x > 2) (n + 1)%nat
-	\end{lstlisting}
-\end{frame}
-
-\begin{frame}[fragile]{The Program Library}
-	Using add, we can give an example for obligations generated to plug in holes in types:
-	
-	\begin{lstlisting}[style=myCoqstyle]
-	Definition mul2(n: nat): nat := add n n _.
-	\end{lstlisting}
-	
-	It will generate require us to give an expression of the type of the missing part, specifically in this case
-	
-	\begin{lstlisting}[style=myCoqstyle]
-	$\forall$ n: nat, n $\ge$ n
-	\end{lstlisting}
-\end{frame}
-
 \begin{frame}
 	\frametitle{Structure}
 	Stainless programs from our point of view are:
@@ -364,7 +384,7 @@ Axiom classicT: forall P: Prop, P + ~P.
 				\onslide<6-> {
 				\begin{itemize}
 					\item Non-recursive
-					\onslide<7->{\item (Self)Recursive}
+					\onslide<7->{\item Recursive}
 					\only<8>{\item Mutually Recursive}
 					\onslide<9>{\item \st{Mutually Recursive}}
 				\end{itemize}
@@ -564,6 +584,9 @@ Equations f ($T_1$: Type) ... ($T_k$: Type)
 
 \begin{frame}[fragile]
 	\frametitle{Function Application}
+	
+	How to write function application depends on whether the it has pre- or postcondition
+	
 	\begin{itemize}
 		\item If the method had preconditions, we pass \_, so that Program will generate obligations for us.
 		\item If there is a postcondition, the result has to be projected
@@ -598,11 +621,7 @@ proj1_sig (f T1 ... Tj p1 ... pn _)
 		Pre- and postcondition branching, failing postcondition go into an error branch.
 	Errors are translated to Coq using contradiction: $$\tr{\text{error}} = \text{contradiction} ~ \_$$
 	}
-	\onslide<3->{Contradictions can be expressed as the obligation to generate false.:
-	\coqInline{
-		Definition contradiction (T: Type)(p: False) : T := match p with end.
-	} 
-	
+	\onslide<3->{
 	Applying \coqInline{contradiction} on an unknown variable will result in an obligation to derive \coqInline{False} from the context.}
 	
 \end{frame}
@@ -954,9 +973,10 @@ end.
 		\item Set operations (contains, content, intersection, ...)
 		\item Integer operations (size, indexOf, indexWhere, ...)
 		
+		
+		\onslide<2->{\item 77 methods in total}		
 	\end{itemize}
 
-	\onslide<2->{77 methods in total}
 \end{frame}
 
 \begin{frame}
@@ -975,11 +995,13 @@ end.
 
 \begin{frame}
 	\frametitle{Conclusions}
-	Not so bad
+	\begin{itemize}
+		\item Translating Stainless programs to Coq
+		\item Tactics to solve generated goals
+		\item Benchmark using List library  (66/77 verified)
+	\end{itemize}
 	
-	\onslide<2-> {Could be better}
-	
-	\onslide<3-> {
+	\onslide<2-> {
 		Future work: 
 		\begin{itemize}
 			\item Extending the supported stainless expressions
