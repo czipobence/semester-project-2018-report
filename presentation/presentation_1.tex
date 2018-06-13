@@ -1,0 +1,1001 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Beamer Presentation
+% LaTeX Template
+% Version 1.0 (10/11/12)
+%
+% This template has been downloaded from:
+% http://www.LaTeXTemplates.com
+%
+% License:
+% CC BY-NC-SA 3.0 (http://creativecommons.org/licenses/by-nc-sa/3.0/)
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%----------------------------------------------------------------------------------------
+%	PACKAGES AND THEMES
+%----------------------------------------------------------------------------------------
+
+\documentclass{beamer}
+
+\mode<presentation> {
+
+% The Beamer class comes with a number of default slide themes
+% which change the colors and layouts of slides. Below this is a list
+% of all the themes, uncomment each in turn to see what they look like.
+
+%\usetheme{default}
+%\usetheme{AnnArbor}
+%\usetheme{Antibes}
+%\usetheme{Bergen}
+%\usetheme{Berkeley}
+%\usetheme{Berlin}
+%\usetheme{Boadilla}
+%\usetheme{CambridgeUS}
+%\usetheme{Copenhagen}
+%\usetheme{Darmstadt}
+%\usetheme{Dresden}
+%\usetheme{Frankfurt}
+%\usetheme{Goettingen}
+%\usetheme{Hannover}
+%\usetheme{Ilmenau}
+%\usetheme{JuanLesPins}
+%\usetheme{Luebeck}
+\usetheme{Madrid}
+%\usetheme{Malmoe}
+%\usetheme{Marburg}
+%\usetheme{Montpellier}
+%\usetheme{PaloAlto}
+%\usetheme{Pittsburgh}
+%\usetheme{Rochester}
+%\usetheme{Singapore}
+%\usetheme{Szeged}
+%\usetheme{Warsaw}
+
+% As well as themes, the Beamer class has a number of color themes
+% for any slide theme. Uncomment each of these in turn to see how it
+% changes the colors of your current slide theme.
+
+%\usecolortheme{albatross}
+%\usecolortheme{beaver}
+%\usecolortheme{beetle}
+%\usecolortheme{crane}
+%\usecolortheme{dolphin}
+%\usecolortheme{dove}
+%\usecolortheme{fly}
+%\usecolortheme{lily}
+%\usecolortheme{orchid}
+%\usecolortheme{rose}
+%\usecolortheme{seagull}
+%\usecolortheme{seahorse}
+%\usecolortheme{whale}
+%\usecolortheme{wolverine}
+
+%\setbeamertemplate{footline} % To remove the footer line in all slides uncomment this line
+%\setbeamertemplate{footline}[page number] % To replace the footer line in all slides with a simple slide count uncomment this line
+
+%\setbeamertemplate{navigation symbols}{} % To remove the navigation symbols from the bottom of all slides uncomment this line
+}
+
+\usepackage{graphicx} % Allows including images
+\usepackage{booktabs} % Allows the use of \toprule, \midrule and \bottomrule in tables
+
+\usepackage[utf8]{inputenc}
+\usepackage{soul}
+
+%----------------------------------------------------------------------------------------
+% RANDOM PACKAGES
+%----------------------------------------------------------------------------------------
+
+
+\usepackage[parfill]{parskip} %Skip initial spacing for each paragraph
+
+%%Listings
+\usepackage{algorithm}
+
+\usepackage{enumerate}
+
+%\usepackage[inline]{enumitem}
+\usepackage{xspace}
+\usepackage{listings}
+
+\newtheorem{assumption}{Assumption}
+
+\newcommand{\tf}{t}
+\newcommand{\invtf}{t^{-1}}
+\newcommand{\true}{\text{true}}
+\newcommand{\false}{\text{false}}
+\newcommand{\True}{\top}
+\newcommand{\False}{\bottom}
+\newcommand{\tr}[1]{[#1]}
+
+\newcommand{\reduceTo}{\rightarrow^{*}}
+\newcommand{\reduceToCoq}{\rightarrow^{*}_{\text{coq}}}
+
+%% LISTINGS %%
+
+\usepackage{xcolor}
+\usepackage{lstcoq}
+
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+\definecolor{ltblue}{rgb}{0,0.4,0.4}
+\definecolor{dkblue}{rgb}{0,0.1,0.6}
+\definecolor{dkgreen}{rgb}{0,0.35,0}
+\definecolor{dkviolet}{rgb}{0.3,0,0.5}
+\definecolor{dkred}{rgb}{0.5,0,0}
+
+\lstdefinestyle{myScalastyle}{
+	frame=tb,
+	language=scala,
+	aboveskip=3mm,
+	belowskip=3mm,
+	showstringspaces=false,
+	columns=flexible,
+	basicstyle={\small\ttfamily},
+	numbers=none,
+	numberstyle=\tiny\color{gray},
+	keywordstyle=\color{blue},
+	commentstyle=\color{dkgreen},
+	stringstyle=\color{mauve},
+	frame=single,
+	breaklines=true,
+	breakatwhitespace=true,
+	tabsize=3,
+}
+
+\lstdefinestyle{myCoqstyle}{
+	frame=tb,
+	language=coq,
+	aboveskip=3mm,
+	belowskip=3mm,
+	showstringspaces=false,
+	columns=flexible,
+	basicstyle={\small\ttfamily},
+	numbers=none,
+	numberstyle=\tiny\color{gray},
+	keywordstyle=\color{blue},
+	commentstyle=\color{dkgreen},
+	stringstyle=\color{mauve},
+	frame=single,
+	breaklines=true,
+	breakatwhitespace=true,
+	tabsize=3,
+}
+
+\newcommand{\scalaInline}[1]{\lstinline[style=myScalastyle]|#1|}
+\newcommand{\coqInline}[1]{\lstinline[style=myCoqStyle]|#1|}
+%----------------------------------------------------------------------------------------
+%	TITLE PAGE
+%----------------------------------------------------------------------------------------
+
+\title[Semester project]{Verifying correctness of Stainless programs using Coq} % The short title appears at the bottom of every slide, the full title is only on the title page
+
+\author{Bence Czipó 
+	%\\{\small Advisors: Jad Hamza, Viktor Kunčak}
+} % Your name
+\institute[] % Your institution as it will appear on the bottom of every slide, may be shorthand to save space
+{
+École Polytechnique Fédérale de Lausanne \\ % Your institution for the title page
+\medskip
+\textit{bence.czipo@epfl.ch} % Your email address
+}
+\date{\today} % Date, can be changed to a custom date
+
+\begin{document}
+
+\begin{frame}
+\titlepage % Print the title page as the first slide
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Overview} % Table of contents slide, comment this block out to remove it
+\tableofcontents % Throughout your presentation, if you choose to use \section{} and \subsection{} commands, these will automatically be printed on this slide as an overview of your presentation
+\end{frame}
+
+%----------------------------------------------------------------------------------------
+%	PRESENTATION SLIDES
+%----------------------------------------------------------------------------------------
+
+\section{Translation}
+
+\begin{frame}
+	\frametitle{The Translation Function}
+	\begin{definition}[Translation function]
+		Let $\tf$ be a function that assigns a (correctly typed) Coq program to every (correctly typed) Stainless program. Though $\tf$ is not designed to be invertible, for simplicity let us introduce the $\invtf$ notation where $\invtf(\tf(p)) = p$. Also for simplicity, let us denote $\tf(p)$ by $\tr{p}$.
+	\end{definition}
+\end{frame}
+\subsection{Basic Concepts}
+
+\begin{frame}
+	\frametitle{Uniqueness of names}
+	
+	Translation loses some scoping rules
+	
+	\onslide<2-> {Uniqueness of names is ensured by renaming.}
+	
+	\onslide<3->{$x \rightarrow x_0$,}
+	\onslide<4->{\\ $x \rightarrow x_1$,\\...}
+	
+	\onslide<5->{
+		Polymorphism is not supported, methods are needed to be renamed.
+	}
+	
+	\onslide<6->{\scalaInline{def forall[T](l : List[T], p: T -> Boolean) -> forall0}}
+	
+	\onslide<7->{
+		\scalaInline{def forall[T](o: Option[T], p: T -> Boolean) -> forall1}
+		
+		From now on, unique names are assumed.
+	}
+	
+	
+\end{frame}
+
+\begin{frame}
+	\frametitle{Translating simple types}
+	
+	Most constructs have exact Coq representation
+	
+	\begin{itemize}
+		\item $\tr{\text{BigInt}} = \tr{\text{Int}} = Z$
+		
+		\item $\tr{\text{Boolean}} =  bool$ (not Prop)
+		
+		\item $\tr{(a,b,\ldots)} = (\tr{a},\tr{b},\ldots)$
+		
+		\item $\tr{f(p_1,p_2,\ldots)} = (f ~ \tr{p_1} ~  \tr{p_2} \ldots)$
+		
+		\item $\tr{\lambda x. ~ e} = (\text{fun} ~ x ~ \Longrightarrow ~ \tr{e} \ldots)$
+	\end{itemize}
+	 
+\end{frame}
+
+\begin{frame}[fragile]
+	\frametitle{Dependent if-then-else}
+	
+	In the expression \scalaInline{if (p) then tb else fb}, we would like to propagate the boolean value of p to the branches.
+	There are some solutions, but for more flexibility with the expressions, we defined our own.
+	
+	\begin{lstlisting}[style=myCoqstyle]
+	Definition ifthenelse b A (e1: true = b -> A) (e2: false = b -> A): A :=
+	match b as B return (B = b -> A) with
+	| true => fun H => e1 H
+	| false => fun H => e2 H
+	end eq_refl.
+	\end{lstlisting}
+	Used for:
+	\begin{itemize}
+		\item if then else
+		\item non-exhaustive matches
+		\item boolean and (\scalaInline{\&\&})
+	\end{itemize}
+	
+	
+\end{frame}
+
+\begin{frame}[fragile]
+	\frametitle{Translating equality}
+	Equality is usually translated using the coq equality.
+	
+		In Coq, \coqInline{a = b} is of type \coqInline{Prop}.
+	
+\begin{lstlisting}[style=myCoqstyle]
+Definition propInBool (P: Prop): bool :=
+if (classicT P)
+then true
+else false.
+\end{lstlisting}
+
+Decidable type system: every Prop is True or False
+
+\begin{lstlisting}[style=myCoqstyle]
+Axiom classicT: forall P: Prop, P + ~P.
+\end{lstlisting}
+
+\onslide<2-> {
+	Exceptions: BigInt, Int, Boolean and Sets
+}
+
+\end{frame}
+
+\begin{frame}{Translating Sets}
+	The Coq standard library comes with a limited set implementation.
+	
+	\onslide<2->{Coq-std++ (stdpp): collection of data structures, lemmas and tactics.}
+	
+	\onslide<3->{Contains sets with every common operation and \coqInline{set_solver} tactic to solve obligations }
+\end{frame}
+
+\begin{frame}{The Program Library}
+	Program is a Coq library that:
+	\begin{itemize}
+		\item allows us to convert between types and dependent types implicitly
+		\onslide<2->{\item generates obligations to "plug in" holes in the context}
+		\onslide<3->{\item also allows incomplete missing parameters, for which, it will generate obligations}
+		\onslide<4->{\item defines an Obligation Tactic to solve the generated obligations
+		}
+	\end{itemize}
+	
+\end{frame}
+
+\begin{frame}[fragile]{The Program Library}
+	For example, we can have the following definition:
+	\begin{lstlisting}[style=myCoqstyle]
+	Definition add (n : nat)(m: nat) (p: n >= m) : { x : nat | x > 2 } :=
+	Nat.add n 1.
+	\end{lstlisting}
+	
+	The refined type will generate an obligation we have to prove:
+	\begin{lstlisting}[style=myCoqstyle]
+	$\forall$ n m : nat, n $\ge$ m $\rightarrow$ ($\lambda$ x : nat, x > 2) (n + 1)%nat
+	\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{The Program Library}
+	Using add, we can give an example for obligations generated to plug in holes in types:
+	
+	\begin{lstlisting}[style=myCoqstyle]
+	Definition mul2(n: nat): nat := add n n _.
+	\end{lstlisting}
+	
+	It will generate require us to give an expression of the type of the missing part, specifically in this case
+	
+	\begin{lstlisting}[style=myCoqstyle]
+	$\forall$ n: nat, n $\ge$ n
+	\end{lstlisting}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Structure}
+	Stainless programs from our point of view are:
+	\onslide<2-> {
+		\begin{itemize}
+			\item ADT Definitions
+			\onslide<3-> {
+				\begin{itemize}
+					\item ADTSort
+					\onslide<4->{\item ADTConstructor}
+				\end{itemize}
+			}
+			\onslide<5-> {\item Methods on them}
+				\onslide<6-> {
+				\begin{itemize}
+					\item Non-recursive
+					\onslide<7->{\item (Self)Recursive}
+					\only<8>{\item Mutually Recursive}
+					\onslide<9>{\item \st{Mutually Recursive}}
+				\end{itemize}
+			}
+		\end{itemize}
+	}
+	
+\end{frame}
+
+\subsection{Transforming Abstract Data Types}
+
+\begin{frame}
+	\Huge{\centerline{Transforming Abstract Data Types}}
+\end{frame}
+
+\begin{frame}[fragile]
+	\frametitle{List Example}
+	
+	Best explained through an example:
+	
+	\begin{lstlisting}[style=myScalastyle]  
+	sealed abstract class List[T] {}
+	
+	case class Nil[T]() extends List[T] {}
+	
+	case class Cons[T](h: T, t: List[T]) extends List[T] {}
+	\end{lstlisting}
+	
+\end{frame}
+
+\begin{frame}[fragile]
+	\frametitle{Type definitions}
+	
+	Inductive type definitions for ADTSorts. The sematntics behind this is that an ADTSort is one of its constructors.
+	
+	\begin{lstlisting}[style=myCoqstyle]  
+	Inductive List (T: Type) :=
+	| Cons: T -> ((List T) -> (List T))
+	| Nil: List T.
+	\end{lstlisting}
+	
+\end{frame}
+
+\begin{frame}[fragile]
+	\frametitle{Recognizing Types}
+	
+	We can use pattern matching to check for concrete subtype
+	
+\begin{lstlisting}[style=myCoqstyle]  
+Definition isCons (T: Type) (src: List T) : bool :=
+match src with
+| Cons _ _ _ => true
+| _ => false
+end.
+\end{lstlisting}
+
+Using the recognizers, we can define a type for the subtypes as a refined type.
+
+\begin{lstlisting}[style=myCoqstyle]  
+Definition Cons_type (T: Type) : Type :=
+{src: List T | (isCons T src = true)}. 
+\end{lstlisting}
+	
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Accessing Fields}
+
+Now that we have the subtypes, we can have accessors to their fields
+
+\begin{lstlisting}[style=myCoqstyle]  
+Definition h (T: Type) (src: Cons_type T) : T :=
+match src with
+| Cons_construct _ f0 f1 => f0
+| _ => let contradiction: False := _ in match contradiction with end
+end. 
+\end{lstlisting}
+
+\end{frame}
+
+
+\subsection{Transforming Methods}
+
+\begin{frame}[fragile]
+\frametitle{Methods}
+A general method is built up from
+\begin{itemize}
+	\item a function name $f$
+	\item type parameters $T_1 \ldots T_k$ and arguments $p_1$ of type $U_1$, $p_2$ of type $U_2$ ... , $p_n$ of type $U_n$ and a return type $U_r$
+	\item a precondition pre of type \scalaInline{A => Boolean}, where $A \preceq \{U_1 x \ldots x U_n\}$
+	\item a body $b$ of type $\{U_1 x \ldots x U_n\} \Longrightarrow U_r$
+	\item a postcondition $post$ of type $U_r$\scalaInline{ => Boolean } 
+\end{itemize}
+
+If there are more pre- and postcondition, they can be combined into one pre- and postcondition using conjunction.
+
+\end{frame}
+
+\begin{frame}
+	\Huge{\centerline{Transforming Methods}}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Transforming non-recursive methods}
+	
+	If there is no recursion involved, the translation is straightforward.
+	
+	\onslide<2->{Preconditions can be expressed in Coq by taking an argument that states that the precondition holds, in oder means, taking an argument with the type $\text{pre} = \true$.}
+	
+	
+	\onslide<3->{Postconditions can be expressed by a dependent return type. In case of a postcondition  $\lambda  \text{res}. ~\text{post}( \text{res})$ the return type changes to $\{\text{res}: U_r ~|~ \text{post}( \text{res})\}$. 
+	}	
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{An example}
+\begin{lstlisting}[style=myScalastyle]
+def f[T1 ... Tk](p1: U1, ... pn: Un): Ur = {
+require(pre(A))
+b
+} ensuring {res => post(res)}
+\end{lstlisting}
+
+Is translated to
+
+\begin{lstlisting}[style=myCoqstyle]  
+Definition f ($T_1$: Type) ... ($T_k$: Type)($p_1$: $\tr{U_1}$) $\ldots$ ($p_n$: $\tr{U_n}$) (prec: $\tr{\text{pre}}$ = true) : 
+{res: $\tr{U_r} ~|~ \tr{\text{post}}$ res} :=
+$\tr{b}$.
+\end{lstlisting}
+
+\end{frame}
+
+
+\subsection{Transforming Recursive Methods}
+
+
+\begin{frame}
+	\Huge{\centerline{Transforming Recursive Methods}}
+\end{frame}
+
+
+\begin{frame}[fragile]
+	\frametitle{Translating Recursive Methods}
+	Program library has Program Fixpoint to write recursive functions.
+	
+	Makes it extremely hard to rewrite.
+	
+	We used \emph{CoqEquations} instead.
+	
+\begin{lstlisting}[style=myCoqStyle]
+Equations negb (b : bool) : bool :=
+	negb true := false ;
+	negb false := true.
+\end{lstlisting}
+\end{frame}
+
+
+\begin{frame}[fragile]
+	\frametitle{Persevering benefits of Program}
+	We still want to handle pre- and postconditions using Program.
+	
+	We can translate preconditions into dependent types:
+	\begin{lstlisting}[style=myCoqstyle]  
+Definition prt ($T_1$: Type) ... ($T_k$: Type)($p_1$: $\tr{U_1}$) $\ldots$ ($p_n$: $\tr{U_n}$) :
+Type := $\tr{\text{pre}}$ = true
+	\end{lstlisting}
+	
+	And postconditions just the same:
+	\begin{lstlisting}[style=myCoqstyle] 
+Definition rt ($T_1$: Type) ... ($T_k$: Type)($p_1$: $\tr{U_1}$) $\ldots$ ($p_n$: $\tr{U_n}$) (prec: prt $T_1$ $\ldots$ $T_k$ $p_1$ $\ldots$ $p_n$) : Type :=
+{res: $\tr{U_r} ~|~ \tr{\text{post}}$ res}
+	
+	\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+	\frametitle{Persevering benefits of Program}
+	The previous example in the recursive case would be translated to:
+	
+	\begin{lstlisting}[style=myCoqstyle]
+Equations f ($T_1$: Type) ... ($T_k$: Type)
+			     ($p_1$: $\tr{U_1}$) $\ldots$ ($p_n$: $\tr{U_n}$) 
+			     (prec: prt $T_1$ $\ldots$ $T_k$ $p_1$ $\ldots$ $p_n$) : 
+			     rt $T_1$ $\ldots$ $T_k$ $p_1$ $\ldots$ $p_n$ prec :=
+						f $T_1$ $\ldots$ $T_k$ $p_1$ $\ldots$ $p_n$ prec by rec ignore_termination lt :=
+						f $T_1$ $\ldots$ $T_k$ $p_1$ $\ldots$ $p_n$ prec :=
+								$\tr{b}$.
+	\end{lstlisting}
+	
+	The \coqInline{ignore\_termination} is the decreasing measure in the recursion. We will have an obligation proving it to be decreasing.
+	
+	Later, if we want to rewrite with the content of the function, we can rely on the fact that it will be expressed by \coqInline{f\_equation\_1}.
+	
+\end{frame}
+
+
+\begin{frame}[fragile]
+	\frametitle{Function Application}
+	\begin{itemize}
+		\item If the method had preconditions, we pass \_, so that Program will generate obligations for us.
+		\item If there is a postcondition, the result has to be projected
+	\end{itemize}
+
+\begin{lstlisting}[style=myCoqstyle]  
+proj1_sig (f T1 ... Tj p1 ... pn _)
+\end{lstlisting}
+
+\end{frame}
+
+\section{Relation Between Proofs and Correctness}
+\begin{frame}
+	\Huge{
+		\begin{center}
+			Relation Between Proofs and Correctness
+		\end{center}
+	}
+\end{frame}
+
+\begin{frame}{Validity - Stainless}
+	\begin{definition}[Stainless-validity]
+		A Stainless program $p$ is valid if
+		
+		\begin{itemize}
+			\item the preconditions hold for every call of $f$
+			\item for any input satisfying the preconditions, the postcondition holds
+		\end{itemize}
+	\end{definition}
+
+	\onslide<2->{
+		Pre- and postcondition branching, failing postcondition go into an error branch.
+	Errors are translated to Coq using contradiction: $$\tr{\text{error}} = \text{contradiction} ~ \_$$
+	}
+	\onslide<3->{Contradictions can be expressed as the obligation to generate false.:
+	\coqInline{
+		Definition contradiction (T: Type)(p: False) : T := match p with end.
+	} 
+	
+	Applying \coqInline{contradiction} on an unknown variable will result in an obligation to derive \coqInline{False} from the context.}
+	
+\end{frame}
+
+\begin{frame}{Validity - Coq}
+ \begin{definition}[Coq-validity]
+ 	A Coq program $p$ is valid if there is a proof (an expression of that type) for every obligation generated by it.
+ \end{definition}
+
+\onslide<2->{We can define relation between the two}
+
+\onslide<3->{\begin{theorem}
+		For every (correctly typed) Stainless program $p$ and its translation $\tr{p}$, if $\tr{p}$ is proved to be valid by Coq, than $p$ is also valid.
+\end{theorem}}
+
+\onslide<4->{Instead of proving this we will just sketch some notions why is it true.
+}
+
+\end{frame}
+
+\begin{frame}{Proof(ish)}
+	
+	\begin{assumption}
+		\label{ass:bools}
+		For every every Scala term \scalaInline{b: Boolean} we assume that if $b \reduceTo c$ where $c \in \{\text{true}, \text{false}\}$ then $\tr{b} \reduceToCoq \tr{c}$.
+	\end{assumption}
+
+\onslide<2->{
+If b evaluates to a boolean constant in Stainless (under the context $\Gamma$), its translated representation evaluate to the representation of that boolean constant in Coq (under the context $\tr{\Gamma}$)
+}
+
+\onslide<3-> {
+\begin{assumption}
+	Let us assume that in the program $p$, every decision is a branching based on a boolean condition.
+\end{assumption}
+}
+
+\onslide<4-> {
+	\begin{assumption}
+		Let us assume that $p$ does not contain any free variables.
+	\end{assumption}
+}
+
+\end{frame}
+
+\begin{frame}{Proof(ish)}
+	By contradiction: assume $\tr{p}$ is proven to be correct, but $p$ crashes
+	
+	\onslide<2->{
+		there is a branch in p that contains error, and it is accessed through evaluating the boolean expressions $b_1, b_2 \ldots b_n$
+	}
+
+	\onslide<3->{$\tr{p}$ reduces to the same branch $\rightarrow$ contradiction}
+	
+	\onslide<4- >{Coq was able to prove it: $\{\} \vdash x: False$}
+	
+	\onslide<5->{
+	
+	\begin{fact}
+		In Coq, if $\{\} \vdash t: T$, then $t \reduceToCoq v$, where v is a value of $T$
+	\end{fact}
+	\begin{fact}
+		There is no value of type \coqInline{False}.
+	\end{fact}
+	}	
+\end{frame}
+
+\section{Automated Verification}
+
+\begin{frame}
+	\Huge{\centerline{Automated Verification}}
+\end{frame}
+
+
+\begin{frame}
+	\frametitle{Automatic Verification}
+	
+	How to solve obligations automatically?
+	
+	\onslide<2->{Define obligation tactic}
+	
+	\begin{enumerate}
+		\onslide<3->{\item Fast tactics}
+		\onslide<3->{\item Basic Tactics}
+		\onslide<3->{\item Slow Tactics}
+		\onslide<3->{\item Set Tactics}
+		\onslide<3->{\item Case Analysis}
+		\onslide<3->{\item Rewrite}
+		
+	\end{enumerate}
+	
+\end{frame}
+
+\begin{frame}
+	\frametitle{Fast tactics}
+	
+	Some Coq tactics are fast to fail:
+	\begin{itemize}
+		\item cbn
+		\item intros
+		\item intuition
+		\item discriminate
+		\item ...
+	\end{itemize}
+\end{frame}
+
+
+
+\begin{frame}[fragile]
+	\frametitle{Fast Rewrites}
+	Integer operations:
+	
+	\coqInline{
+		forall x y : Z, (x <=? y) = false <->  y < x}
+	
+	Boolean operations:
+	\coqInline{forall a b : bool, eqb a b = true <-> a = b}
+
+	\onslide<2-> {
+		Own rewrite lemmas about booleans: \\
+		\coqInline{  forall b1 b2,
+			negb b1 = negb b2 <-> b1 = b2}
+	}
+	
+	\onslide<3-> {
+		Rewrite lemmas with Props and bools:
+		\coqInline{forall P, propInBool P = true <-> P}
+	}
+	
+	\onslide<4->{
+		Own rewrite lemmas about if-then-else: \\		
+		\coqInline{forall b: bool,  (if b then true else false) = b.}
+	}
+
+\end{frame}
+
+\begin{frame}[fragile]
+	\frametitle{Fast Rewrites}
+	
+	
+	Also some rewrite lemmas with dependent if-then-else:
+\begin{lstlisting}[style=myCoqstyle]
+ forall T b e1 e2 value,
+	ifthenelse b T e1 e2 = value <-> (
+	(exists H1: true = b, e1 H1 = value) \/
+	(exists H2: false = b, e2 H2 = value)
+	).
+\end{lstlisting}
+	
+	or
+	
+\begin{lstlisting}[style=myCoqstyle]
+forall b (e1: true = b -> bool),
+	ifthenelse b bool e1 (fun _ => false) = true <->
+	exists H: true = b, e1 H = true.
+\end{lstlisting}
+	
+\end{frame}
+
+\begin{frame}[fragile]
+	\frametitle{Admitting termination obligations}
+	
+	Some obligations are related to termination, that we ignore currently.
+	
+	We will have \coqInline{(ignore\_termination < ignore\_termination)\%nat} in the goal
+	
+	Specific tactic to recognize it, and admit it.
+	
+	\begin{lstlisting}[style=myCoqstyle]
+match goal with
+(...)
+| |- (S ?T <= ?T)%nat =>
+	unify T ignore_termination; apply False_ind; exact unsupported
+(...)
+end.
+	\end{lstlisting}
+	
+\end{frame}
+
+
+\begin{frame}
+	\frametitle{Basic Tactics}
+	\begin{itemize}
+		\item Rewriting with boolean constants and value
+		\item Destruction of exists, refinement, etc...
+		\item Prop $\leftrightarrow$ bool rewrites
+	\end{itemize}
+\end{frame}
+
+
+\begin{frame}{Slow Tactics}
+	Coq's "not-so-fast" tactics:
+	\begin{itemize}
+		\item omega
+		\item ring
+		\item eauto (currently not included)
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Set Tactics}
+	Solve sets using \coqInline{set\_solver} of stdpp. 
+	
+	Also includes some basic set rewrites before:
+	\begin{itemize}
+		\item $\emptyset \cup s = s$
+		\item $s \cup \emptyset = s$
+		\item $s_1 = s_2 \implies s_3 \cup s_1 = s_3 \cup s_2  $
+		\item $s_1 = s_2 \leftrightarrow s_1 \subseteq s_2 \wedge s_2 \subseteq s_1$
+		\item $x \in s_1 \vee x \in s_2 \leftrightarrow x \in (s_1 \cup s_2)$
+		\item ...
+	\end{itemize}	
+\end{frame}
+
+\begin{frame}
+	\frametitle{Case Analysis}
+	If we encounter an if-then-else (both dependent and non-dependent) or a match we can 
+	\begin{itemize}
+		\item rewrite using some smart rule, e.g.
+		
+		\onslide<2->{
+			\coqInline{(forall H1: true = b, e1 H1 = value) ->}
+			\coqInline{
+				(forall H2: false = b, e2 H2 = value) ->}
+			\coqInline{
+				ifthenelse b T e1 e2 = value. }}
+		\onslide<3->{\item perform case-analysis}
+	\end{itemize}
+	
+	
+\end{frame}
+
+\begin{frame}
+	\frametitle{Rewrites}
+	Rewrites can cause loops and obfuscate the goal. 
+	
+	The order is important:
+	\onslide<2->{
+		\begin{enumerate}
+			\item Rewrite with non-recursive types
+			\onslide<3->{\item Rewrite with the body of recursive functions}
+			\onslide<4->{\item Rewrite with recognizers (\coqInline{isXY})}
+		\end{enumerate}
+	}
+	\onslide<5->{Rewriting with the body of recursive methods does not happen here, rather, they are just put into the context as equations.}
+	
+	\onslide<6->{Right after fast tactics, whenever we see an \textbf{appropriate} equation we rewrite with it}
+\end{frame}
+
+\begin{frame}[fragile]
+	\frametitle{Appropriate?}
+	We only rewrite with the body of recursive functions, if their body will probably not be the subject of further refinement. 
+	
+	\begin{lstlisting}[style=myCoqstyle]
+	Rw: size T l = match l with
+	 | Nil T => 0
+	 | Cons T x xs => 1 + size T xs
+	end.
+	\end{lstlisting}
+	This will just introduce more branches to deal with, and we would like to perform destructing before rewriting. 
+	
+	
+	
+\end{frame}
+
+\begin{frame}[fragile]
+	\frametitle{Appropriate?}
+	However, if we know that \coqInline{l} is cons:
+\begin{lstlisting}[style=myCoqstyle]
+l, ys : List T
+y: T
+H : l = Cons y ys
+(...)
+Rw : size T l = match (Cons y ys) with
+| Nil T => 0
+| Cons T x xs => 1 + size T xs
+end.
+\end{lstlisting}
+
+	We can simplify it to: 
+	
+\begin{lstlisting}[style=myCoqstyle]
+	Rw: size T l = 1 + size T ys
+\end{lstlisting}
+\end{frame}
+
+\section{Implementation}
+
+\begin{frame}
+	\Huge{\centerline{Implementation}}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Implementation}
+	
+	Integrate into Stainless toolchain
+	
+	\onslide<2->{Generate separate files per function, that includes all dependencies}
+	
+	\onslide<3->{
+		\begin{itemize}
+			\item All ADT's
+			\item (Transitively) invoked functions
+		\end{itemize}
+	}
+
+	\onslide<4-> {
+		\coqInline{Admit Obligations} for dependencies
+		
+		\begin{itemize}
+			\item Saves time
+			\item Eliminates domino effect
+		\end{itemize}
+	
+		A method is valid if the verification condition generated for it is valid, and the verification conditions of all of its dependencies are correct too.
+	}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Architecture}
+	VerificationChecker $\rightarrow$ CoqVerificationChecker
+	
+	\onslide<2-> {CoqIO.scala: invoke coqc and check the output}
+
+	\onslide<3-> {
+		Possible output:
+		\begin{itemize}
+			\item Valid
+			\onslide<4->{\item Invalid: the execution terminated without solving one or more obligations}
+			\onslide<5->{\item Timeout: the verification timed out}
+			\onslide<6->{\item Error: the verification failed, because of some internal error, most likely an error in the generated file}
+			\onslide<7->{\item Canceled: the verification was canceled}
+		\end{itemize}
+	}
+	
+\end{frame}
+
+
+\section{Benchmark}
+
+\begin{frame}
+	\Huge{\centerline{Benchmark}}
+\end{frame}
+
+\begin{frame}
+	\frametitle{List library}
+	\begin{itemize}
+		\item Recursive, but not mutually recursive methods
+		\item Inductive ADT's
+		\item Set operations (contains, content, intersection, ...)
+		\item Integer operations (size, indexOf, indexWhere, ...)
+		
+	\end{itemize}
+
+	\onslide<2->{77 methods in total}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Results}
+	
+	Verification run with 5 minutes timeout
+	
+	\begin{itemize}
+		\item Valid: 66 
+		\item Invalid: 0
+		\item Timeout: 11
+		\item Error: 0 
+		
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Conclusions}
+	Not so bad
+	
+	\onslide<2-> {Could be better}
+	
+	\onslide<3-> {
+		Future work: 
+		\begin{itemize}
+			\item Extending the supported stainless expressions
+			\item Enhance tactics so that they handle the whole library
+			\item Speed up tactics, external \coqInline{set-solver} tactic is really slow to fail, blocks every execution requiring a rewrite with definition
+			\item Check termination
+		\end{itemize}
+		
+	}
+\end{frame}
+
+
+
+\begin{frame}
+	\Huge{\centerline{Questions?}}
+\end{frame}
+
+
+\end{document} 
