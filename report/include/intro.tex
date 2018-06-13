@@ -1,0 +1,9 @@
+\section{Introduction}
+\label{sec:introduction}
+
+Since the appearance of the first software, formally proving their correctness has been an important challenge. Nowadays, there are several approaches to perform formal verification using different foundations such as satisfiability modulo theories (SMT) or the calculus of inductive constructions.
+
+In case of formal verification tools, the question always remains, whether the tool is correct. In other terms, who is going to verify the verification checker? One approach to do so can be to transform the checker's input to input of an other tool, that has been proven or accepted to be correct, and compare the verification results. 
+
+
+Stainless, a software verification framework developed at École Polytechnique Federale de Lausanne, uses SMT solvers, whereas Coq is the most known representer of proof assistant using the calculus of inductive constructions. In this report, I propose a verification method for Stainless programs by translating them to input files for the Coq proof assistant. The translation and verification is done automatically, and integrates to the Stainless toolchain. During this report, I only focus on correctness, and ignore termination of programs, moreover I limit the set of allowed Stainless expressions. To benchmark my work, at the end of the report, I include the verification results of the method run on the Lists library of Stainless.
